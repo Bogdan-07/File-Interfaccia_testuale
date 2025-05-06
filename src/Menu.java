@@ -25,6 +25,7 @@ public class Menu
 
         switch(choice)
         {
+
             case 'R':
                 System.out.println(logger.readFile());
                 break;
