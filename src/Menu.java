@@ -1,50 +1,72 @@
-public class Menu
-{
-    private Logger logger;
+import java.util.Scanner;
 
-    public Menu()
-    {
-        logger = new Logger();
+public class Menu {
+    ManageFile manageFile;
+    Scanner userInput;
+
+    // Constructor
+
+    public Menu() {
+        manageFile = new ManageFile();
+        userInput = new Scanner(System.in);
     }
 
-    public void table()
-    {
-        System.out.println("╔═════════════════════════════╗");
-        System.out.println("║      - Read log file        ║");
-        System.out.println("║      - Write log file       ║");
-        System.out.println("║      - Delete log file      ║");
-        System.out.println("║      - Quit                 ║");
-        System.out.println("╚═════════════════════════════╝");
-    }
+    // Menu methods
 
-    public boolean choiceHandler(String input)
-    {
+    public void cli() {
+        System.out.println("╔═══════════════════════════════╗");
+        System.out.println("║      - View file list         ║");
+        System.out.println("║      - Read file content      ║");
+        System.out.println("║      - Delete file            ║");
+        System.out.println("║      - Quit                   ║");
+        System.out.println("╚═══════════════════════════════╝");
+    }
+    public boolean choiceHandler(String input) {
         input = input.toUpperCase();
         char choice = input.charAt(0);
-        boolean quit = false;
+        boolean x = true;
 
-        switch(choice)
-        {
-
-            case 'R':
-                System.out.println(logger.readFile());
+        switch (choice) {
+            case 'V':
+                String[] array = manageFile.viewFileList();
+                String fileList = "";
+                if ((array == null)) {
+                    System.out.println("Error! Check today's log.");
+                    Logger.log("Error while viewing list of files! Folder is empty.");
+                } else
+                    for(String string : array)
+                        fileList += string + "\n";
+                System.out.println(fileList);
+                Logger.log("File list returned succesfully.");
                 break;
-            case 'W':
-                System.out.println("what do you want to write ");
-                System.out.println(logger.writeFile());
+            case 'R':
+                System.out.print("Insert file name: ");
+                String fileContent = manageFile.readFileContent(userInput.nextLine());
+                if (fileContent == null) {
+                    System.out.println("Error! Check today's log.");
+                    Logger.log("Error while reading file content! A file with such name doesn't exist.");
+                } else {
+                    System.out.println("\nHere's the file content: \n" + fileContent);
+                    Logger.log("File content was read successfully.");
+                }
                 break;
             case 'D':
-                if(logger.deleteFile())
-                    System.out.println("Log file deleted successfully");
-                else
-                    System.out.println("Couldn't delete the log file");
+                System.out.print("Insert file name: ");
+                if (manageFile.deleteFile(userInput.nextLine())) {
+                    System.out.println("File deleted.");
+                    Logger.log("File was deleted successfully.");
+                } else {
+                    System.out.println("Error! Check today's log.");
+                    Logger.log("Error while deleting file! A file with such name doesn't exist.");
+                }
                 break;
             case 'Q':
-                quit = true;
+                x = false;
+                Logger.log("User terminated process.");
                 break;
             default:
-                System.out.println("Il carattere "+choice+" non è un opzione valida!");
+                System.out.println("Invalid choice.");
         }
-        return quit;
+        return x;
     }
 }

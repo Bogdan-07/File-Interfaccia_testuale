@@ -1,18 +1,15 @@
 import java.util.Scanner;
 
-public class Main
-{
-    public static void main(String[] args)
-    {
-        Scanner scanner = new Scanner(System.in);
-        Menu test = new Menu();
+public class Main {
+    public static void main(String[] args) {
+        Scanner userInput = new Scanner(System.in);
+        Menu prova = new Menu();
 
         boolean x = true;
 
-        do
-        {
-            test.table();
-            x = test.choiceHandler(scanner.nextLine());
-        }while(x);
+        while(x) {
+            prova.cli();
+            x = prova.choiceHandler(userInput.nextLine());
+        }
     }
 }
